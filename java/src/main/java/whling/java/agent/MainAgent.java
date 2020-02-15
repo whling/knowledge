@@ -1,8 +1,5 @@
 package whling.java.agent;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
  * 参考：https://www.jianshu.com/p/d47e3aa1cb5c
  */
@@ -22,7 +19,6 @@ public class MainAgent {
      */
     public static void main(String[] args) {
         System.out.println("MainAgent...");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss");
-        System.out.println(String.format("当前时间是：[%s]", simpleDateFormat.format(new Date())));
+        new EchoTimeTask().echoTime();
     }
 }

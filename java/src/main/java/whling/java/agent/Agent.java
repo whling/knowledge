@@ -1,5 +1,11 @@
 package whling.java.agent;
 
+import com.google.common.io.Closer;
+import whling.java.agent.transformer.EchoTimeTaskTransformer;
+import whling.java.agent.transformer.MyClassFileTransformer;
+
+import java.io.*;
+import java.lang.instrument.ClassDefinition;
 import java.lang.instrument.Instrumentation;
 
 /**
@@ -34,6 +40,8 @@ public class Agent {
 
         System.out.println("====premain1 方法执行");
         System.out.println("agentArgs1 is:" + agentArgs);
+        MyClassFileTransformer myClassFileTransformer = new MyClassFileTransformer();
+        inst.addTransformer(myClassFileTransformer);
     }
 
     /**
@@ -54,9 +62,46 @@ public class Agent {
      * @param agentArgs
      * @param inst
      */
-    public static void agentmain(String agentArgs, Instrumentation inst) {
+    public static void agentmain(String agentArgs, Instrumentation inst) throws ClassNotFoundException {
         System.out.println("====agentmain方法执行1====");
-        System.out.println("agentArgs1 is:" + agentArgs);
+        inst.addTransformer(new EchoTimeTaskTransformer());
+
+        Closer closer = Closer.create();
+
+        FileInputStream fileInputStream = null;
+        ByteArrayOutputStream bos = null;
+        try {
+            File file = new File("/Users/whling/IdeaProjects/knowledge/dubbo/target/classes/whling/java/agent/EchoTimeTask.class");
+            fileInputStream = closer.register(new FileInputStream(file));
+            bos = closer.register(new ByteArrayOutputStream((int) file.length()));
+            byte[] buffer = new byte[1024];
+            int byteRead;
+            while ((byteRead = fileInputStream.read(buffer, 0, 1024)) != -1) {
+                bos.write(buffer, 0, byteRead);
+            }
+            /**
+             * 将java模块下的EchoTimeTask内容替换dubbo模块下的EchoTimeTask
+             */
+            inst.redefineClasses(new ClassDefinition(Class.forName("whling.java.agent.EchoTimeTask"), bos.toByteArray()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                closer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private static void close(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**

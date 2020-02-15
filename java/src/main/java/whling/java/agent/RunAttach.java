@@ -4,14 +4,19 @@ import com.sun.tools.attach.VirtualMachine;
 
 public class RunAttach {
 
-    public static void main(String[] args) throws Exception {
-        // args[0]传入的是某个jvm进程的pid
-        String targetPid = args[0];
+    public static void main(String[] args)  {
+        try {
 
-        VirtualMachine vm = VirtualMachine.attach(targetPid);
+            VirtualMachine virtualMachine = VirtualMachine.attach("3713");
+            System.out.println("hello,RunAttach");
+            /**
+             * 执行java.jar中的Agent-Class的agentmain方法
+             */
+            virtualMachine.loadAgent("/Users/whling/IdeaProjects/knowledge/java/out/artifacts/java_jar/java.jar");
 
-        vm.loadAgent("/Users/whling/IdeaProjects/knowledge/java/target/java-1.0-SNAPSHOT.jar",
-                "toagent");
+        } catch (Exception e) {
+        }
+
 
     }
 }
