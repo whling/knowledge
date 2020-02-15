@@ -13,6 +13,11 @@
     <modules>
         <module>alogrithm</module>
         <module>mybatis</module>
+        <module>web</module>
+        <module>springmvc</module>
+        <module>java</module>
+        <module>netty</module>
+        <module>dubbo</module>
     </modules>
 
     <properties>
@@ -26,6 +31,7 @@
         <mysql.connector.version>5.1.36</mysql.connector.version>
         <c3p0.version>0.9.5.4</c3p0.version>
         <dom4j.version>2.1.1</dom4j.version>
+        <javax.servlet-api.version>3.1.0</javax.servlet-api.version>
     </properties>
 
     <dependencyManagement>
@@ -76,6 +82,12 @@
                 <groupId>org.dom4j</groupId>
                 <artifactId>dom4j</artifactId>
                 <version>${dom4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>${javax.servlet-api.version}</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
