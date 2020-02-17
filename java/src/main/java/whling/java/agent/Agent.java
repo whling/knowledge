@@ -64,6 +64,7 @@ public class Agent {
      */
     public static void agentmain(String agentArgs, Instrumentation inst) throws ClassNotFoundException {
         System.out.println("====agentmain方法执行1====");
+        // 可以在加载字节码时注册拦截器装换源代码
         inst.addTransformer(new EchoTimeTaskTransformer());
 
         Closer closer = Closer.create();
