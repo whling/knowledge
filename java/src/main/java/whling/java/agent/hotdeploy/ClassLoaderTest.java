@@ -20,6 +20,7 @@ public class ClassLoaderTest {
 
 
         MyClassLoader myClassLoader = new MyClassLoader();
+        System.out.println(myClassLoader);
 
         Class<?> aClass = myClassLoader.loadClass("java.lang.String");
         Class<?> bClass = myClassLoader.loadClass("whling.java.agent.hotdeploy.HelloWorld1");//被系统类加载器加载

@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.lang.reflect.Method;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * 1、 首要了解类加载器是什么
@@ -32,11 +34,19 @@ import java.lang.reflect.Method;
 public class Hotswap {
 
     public static void main(String[] args) throws Exception {
-        loadHelloWorld();
-        loadHelloWorld();
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    Hotswap.loadHelloWorld();
+                } catch (Exception e) {
+                }
+            }
+        },0,2000);
         // 回收资源,释放HelloWorld.class文件，使之可以被替换（怕被程序占用删除不了，改为重新写入内容方式）
 //        System.gc();
-//        Thread.sleep(1000);// 等待资源被回收
+        Thread.sleep(1000);// 等待资源被回收
 
         File fileV2 = new File("/Users/whling/IdeaProjects/knowledge/java/out/artifacts/HelloWorld.class");
         File fileV1 = new File("/Users/whling/IdeaProjects/knowledge/java/target/classes/whling/java/agent/hotdeploy/HelloWorld.class");
@@ -65,7 +75,7 @@ public class Hotswap {
 
     }
 
-    public static void loadHelloWorld() throws Exception {
+    public static synchronized void loadHelloWorld() throws Exception {
 //        ClassLoader classLoader = this.getClass().getClassLoader();
 //        classLoader.d
         MyClassLoader myLoader = new MyClassLoader(); //自定义类加载器
