@@ -23,8 +23,8 @@ public class ClassLoaderTest {
         System.out.println(myClassLoader);
 
         Class<?> aClass = myClassLoader.loadClass("java.lang.String");
-        Class<?> bClass = myClassLoader.loadClass("whling.java.agent.hotdeploy.HelloWorld1");//被系统类加载器加载
-        Class<?> cClass = myClassLoader.loadClass("whling.java.agent.hotdeploy.HelloWorld");// 被自定义类加载器加载
+        Class<?> cClass = myClassLoader.loadClass("whling.java.agent.hotdeploy.HelloWorld");// 被系统类加载器加载
+//        Class<?> bClass = myClassLoader.loadClass("whling.java.agent.hotdeploy.HelloWorld1");//被自定义类加载器加载,发现加载不到，抛出异常
 
 //        Class<?> aClass = myClassLoader.findClass("whling.java.agent.hotdeploy.HelloWorld");
         System.out.println(aClass);
