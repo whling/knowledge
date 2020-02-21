@@ -18,6 +18,7 @@
         <module>java</module>
         <module>netty</module>
         <module>dubbo</module>
+        <module>springboot</module>
     </modules>
 
     <properties>
