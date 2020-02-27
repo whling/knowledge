@@ -11,7 +11,7 @@ package whling.java.string;
  *
  * 对str2比较返回false是**因为“java”这个字符串在执行StringBuilder.toString()之前已经出现过，**字符串常量池中已经有它的引用了，不符合intern()方法要求“首次出现”的原则，而“计算机软件”这个字符串则是首次出现的，因此返回true。
  *
- * sum.misc.Version里面的launcher_name字段的值就是“java”
+ * sum.misc.Version里面的launcher_name字段的值就是“java”，因为jvm在初始化的时候，会调用sum.misc.Version的init方法，就会将sum.misc.Version类做初始化操作，由于launcher_name是由static final修饰的，所以会被放入常量池中
  *
  * https://www.toutiao.com/i6793996527397241351/
  *
