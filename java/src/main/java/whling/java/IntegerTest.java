@@ -27,6 +27,8 @@ public class IntegerTest {
         Integer j = 1234;
 
         System.out.println(i == j);
+
+        System.out.println(i.intValue() == j.intValue());
     }
 
     private static void test2() {
