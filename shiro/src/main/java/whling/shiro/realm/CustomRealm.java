@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class CustomRealm extends AuthorizingRealm {
 
-    Map<String, String> userMap = new HashMap<String, String>(2);
+    Map<String, String> userMap = new HashMap(2);
 
     public static final String REAL_NAME = "custom-realm";
 
