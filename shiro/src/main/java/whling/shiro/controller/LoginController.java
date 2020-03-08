@@ -32,6 +32,12 @@ public class LoginController {
         } catch (AuthenticationException e) {
             return e.getMessage();
         }
+
+
+        if (subject.hasRole("administrator")) {
+            return "welcome administrator";
+        }
+
         return "login success";
     }
 }

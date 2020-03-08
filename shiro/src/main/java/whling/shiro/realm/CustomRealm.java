@@ -10,21 +10,23 @@ import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import whling.shiro.dao.UserDao;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import javax.annotation.Resource;
+import java.util.*;
 
 public class CustomRealm extends AuthorizingRealm {
 
-    Map<String, String> userMap = new HashMap(2);
+    @Resource
+    private UserDao userDao;
+
+//    Map<String, String> userMap = new HashMap(2);
 
     public static final String REAL_NAME = "custom-realm";
 
     {
 //        userMap.put("whling", "202cb962ac59075b964b07152d234b70");  // 未加盐
-        userMap.put("whling", "186c85cc244d41d14894925e6e482deb");  // 加盐
+//        userMap.put("whling", "186c85cc244d41d14894925e6e482deb");  // 加盐
         super.setName(REAL_NAME);
     }
 
@@ -48,17 +50,19 @@ public class CustomRealm extends AuthorizingRealm {
     }
 
     private Set<String> getPermissionsByUserName(String userName) {
-        HashSet<String> permissions = new HashSet<>();
-        permissions.add("user:insert");
-        permissions.add("user:delete");
-        return permissions;
+        return userDao.getPermissionsByUserName(userName);
+//        HashSet<String> permissions = new HashSet<>();
+//        permissions.add("user:insert");
+//        permissions.add("user:delete");
+//        return permissions;
     }
 
     private Set<String> getRolesByUserName(String userName) {
-        HashSet<String> roles = new HashSet<>();
-        roles.add("administrator");
-        roles.add("user");
-        return roles;
+        return userDao.getRolesByUserName(userName);
+//        HashSet<String> roles = new HashSet<>();
+//        roles.add("administrator");
+//        roles.add("user");
+//        return roles;
     }
 
     /**
@@ -84,7 +88,8 @@ public class CustomRealm extends AuthorizingRealm {
 
     private String getPasswordByUserName(String userName) {
 
-        return userMap.get(userName);
+        return userDao.getPasswordByUserName(userName);
+//        return userMap.get(userName);
     }
 
     public static void main(String[] args) {
