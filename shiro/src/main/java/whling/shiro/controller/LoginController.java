@@ -6,6 +6,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import whling.shiro.domain.User;
 
@@ -40,4 +41,34 @@ public class LoginController {
 
         return "login success";
     }
+
+
+//    @RequiresRoles(value = {"administrator"})
+    @RequestMapping(value = "/testRole", method = RequestMethod.GET)
+    @ResponseBody
+    public String testRole(){
+        return "testRole success";
+    }
+
+//    @RequiresRoles(value = {"user1"})
+    @RequestMapping(value = "/testRole1", method = RequestMethod.GET)
+    @ResponseBody
+    public String testRole1(){
+        return "testRole1 success";
+    }
+
+//    @RequiresPermissions(value = {"user:insert"})
+    @RequestMapping(value = "/testPermission", method = RequestMethod.GET)
+    @ResponseBody
+    public String testPermission(){
+        return "testPermission success";
+    }
+
+//    @RequiresPermissions(value = {"user:query"})
+    @RequestMapping(value = "/testPermission1", method = RequestMethod.GET)
+    @ResponseBody
+    public String testPermission1(){
+        return "testPermission1 success";
+    }
+
 }

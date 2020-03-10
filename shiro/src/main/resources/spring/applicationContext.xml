@@ -37,9 +37,29 @@
                 /login.html = anon
                 /subLogin = anon
 
+                <!--roles,perms都是shiro内置的过滤器，多个表示需要同时具备该角色/权限才能访问该路径-->
+                <!--/testRole = roles["administrator","super-administrator"]-->
+                /testRole = rolesOr["administrator","super-administrator"]
+                /testRole1 = roles["administrator"]
+                /testPermission = perms["user:query","user:delete"]
+                /testPermission1 = perms["user:insert"]
                 /** = authc
             </value>
         </property>
+        <property name="filters">
+            <map>
+                <entry key="rolesOr" value-ref="rolesOrFilter"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="rolesOrFilter" class="whling.shiro.filter.RolesOrFilter"/>
+
+    <!-- 保证实现了Shiro内部lifecycle函数的bean执行 -->
+    <bean id="lifecycleBeanPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor"/>
+
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager"/>
     </bean>
 
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
