@@ -8,12 +8,15 @@ import java.util.Objects;
 
 @Controller
 public class DemoController {
+    
+    static int count = 0;
 
     @RequestMapping(value = "/demo")
     @ResponseBody
     public String demo(String name) {
 
-        System.out.println("demo controller ..");
+        count++;
+        System.out.println("demo controller .." + count);
 
         if (Objects.isNull(name)) {
             return "hello world";
