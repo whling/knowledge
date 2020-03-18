@@ -9,6 +9,13 @@ import java.util.Objects;
 @Controller
 public class DemoController {
     
+    static Set<Thread> ts = new HashSet();
+    
+    static ThreadLocal<Integer> tl = ThreadLocal.withInitial(()->{
+        ts.add(Thread.currentThread());
+        return 0;
+    });
+    
     static int count = 0;
 
     @RequestMapping(value = "/demo")
@@ -16,6 +23,7 @@ public class DemoController {
     public String demo(String name) {
 
         count++;
+        tl.set(tl.get() + 1);
         System.out.println("demo controller .." + count);
 
         if (Objects.isNull(name)) {
