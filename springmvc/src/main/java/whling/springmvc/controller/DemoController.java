@@ -4,18 +4,29 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
+/**
+ * 对同一资源进行并发修改，会有线程安全问题
+ *  解决思路主要有：
+ *      1。排队（加锁，同一时刻只保持某一个线程能够访问）
+ *      2。投票（paxos/raft协议之类，同一时刻也只能有一个主导者）
+ *      3。避免（GIT分布式版本控制，做多版本，冲突解决算法/ThreadLocal做多线程隔离，对结果的获取其实就是一种很简单的结果合并，冲突解决）
+ */
 @Controller
 public class DemoController {
-    
-    static Set<Thread> ts = new HashSet();
-    
-    static ThreadLocal<Integer> tl = ThreadLocal.withInitial(()->{
-        ts.add(Thread.currentThread());
-        return 0;
+
+    static Set<Val> ts = new HashSet();
+
+    static ThreadLocal<Val> tl = ThreadLocal.withInitial(() -> {
+        Val val = new Val();
+        val.setCount(0);
+        ts.add(val);
+        return val;
     });
-    
+
     static int count = 0;
 
     @RequestMapping(value = "/add")
@@ -23,8 +34,8 @@ public class DemoController {
     public String add(String name) {
 
         count++;
-        sout
-        tl.set(tl.get() + 1);
+        Val val = tl.get();
+        val.setCount(val.getCount() + 1);
         System.out.println("demo controller .." + count);
 
         if (Objects.isNull(name)) {
@@ -37,8 +48,20 @@ public class DemoController {
     @RequestMapping(value = "/stat")
     @ResponseBody
     public String stat() {
-        return String.valueOf(count);
+        String unsafeCount = String.valueOf(count);
+        Integer safeCount = ts.stream().map(Val::getCount).reduce((a, b) -> a + b).get();
+        return "unsafeCount:" + unsafeCount + " safeCount:" + safeCount;
     }
 
+    static class Val {
+        Integer count;
 
+        public Integer getCount() {
+            return count;
+        }
+
+        public void setCount(Integer count) {
+            this.count = count;
+        }
+    }
 }
