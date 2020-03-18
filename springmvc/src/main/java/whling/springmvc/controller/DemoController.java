@@ -20,6 +20,9 @@ public class DemoController {
 
     static Set<Val> ts = new HashSet();
 
+    /**
+     * 俩种方式：1.class override 2.functional
+     */
     static ThreadLocal<Val> tl = ThreadLocal.withInitial(() -> {
         Val val = new Val();
         val.setCount(0);
