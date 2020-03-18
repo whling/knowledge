@@ -18,9 +18,9 @@ public class DemoController {
     
     static int count = 0;
 
-    @RequestMapping(value = "/demo")
+    @RequestMapping(value = "/add")
     @ResponseBody
-    public String demo(String name) {
+    public String add(String name) {
 
         count++;
         sout
@@ -28,9 +28,17 @@ public class DemoController {
         System.out.println("demo controller .." + count);
 
         if (Objects.isNull(name)) {
-            return "hello world";
+            return "hello world " + count;
         }
 
         return name;
     }
+
+    @RequestMapping(value = "/stat")
+    @ResponseBody
+    public String stat() {
+        return String.valueOf(count);
+    }
+
+
 }
