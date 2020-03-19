@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 对同一资源进行并发修改，会有线程安全问题
@@ -66,5 +67,17 @@ public class DemoController {
         public void setCount(Integer count) {
             this.count = count;
         }
+    }
+
+    public static void main(String[] args) {
+
+        AtomicInteger atomic = new AtomicInteger();
+
+        Integer threadLocalHash = atomic.addAndGet(0x61c88647);
+
+        System.out.println(threadLocalHash);
+        System.out.println(threadLocalHash);
+        System.out.println(threadLocalHash);
+
     }
 }
