@@ -40,6 +40,9 @@
         <guava.version>21.0</guava.version>
         <javassist.version>3.12.1.GA</javassist.version>
         <shiro.version>1.4.2</shiro.version>
+
+        <netty.version>4.1.15.Final</netty.version>
+        <protobuf-java.version>3.3.1</protobuf-java.version>
     </properties>
 
     <dependencyManagement>
@@ -162,6 +165,25 @@
                 <artifactId>spring-boot-starter-tomcat</artifactId>
                 <scope>provided</scope>
                 <version>${spring.boot.version}</version>
+            </dependency>
+
+
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java</artifactId>
+                <version>${protobuf-java.version}</version>
+            </dependency>
+            <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java-util -->
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-java-util</artifactId>
+                <version>${protobuf-java.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
