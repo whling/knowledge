@@ -16,14 +16,17 @@ import java.util.function.Supplier;
  *
  *     俩种解决：
  *      1.使用一个Integer（基本数据类型，并非引用类型）能代替MyEnhanceThreadLocal的标志，确保一一对应
- *      2.使用WeakReference<MyEnhanceThreadLocal<?>> 来包装一层，那么MyEnhanceThreadLocal和Entry就没有必然直接引用关系了，当该Entry没有引用时，那么在gc时，这块区域是可以被回收的。
+ *      2.使用WeakReference<MyEnhanceThreadLocal<?>> 来包装一层，那么MyEnhanceThreadLocal和Entry就没有必然直接引用关系了，但下次gc发生时，threadlocalMap的key会被
+ *      清除掉，对于value的清除，还是得使用者主动调用remove方法清除。
  *
- *
+ *      在大多数情况下，代码的执行一般是在线程池中的，比如web请求是会在tomcat的线程池中处理，dubbo请求会在dubbo自己的线程池中处理，这时，线程资源是重复利用，那么在使用ThreadLocal的时候就得
+ *      在使用结束后调用其remove方法，主动的将这块区域清除，如果不清除的话，线程复用会造成数据不一致情况。
  *
  * 在理想状态下，哈希函数可以将关键字均匀的分散到数组的不同位置，不会出现两个关键字散列值相同（假设关键字数量小于数组的大小）的情况。但是在实际使用中，经常会出现多个关键字散列值相同的情况（被映射到数组的同一个位置），
  * 我们将这种情况称为散列冲突。为了解决散列冲突，主要采用下面两种方式：
  * •	分离链表法（separate chaining）
- * •	开放定址法（open addressing）
+ * •	开放定址法（open addressing）：发生hash冲突之后，在该hash表上寻找指定步长的下一个位置，如果下个位置为空的话，就将其存储在该位置，那么如何找呢？在放的时候，设置了个threadLocalHashCode值，
+ *              这个值跟每个threadLocal对象有关，所以在同一线程多个threadLocal下，也没有关系，可以取出来。
  *
  * ThreadLocalMap 中使用开放地址法来处理散列冲突，而 HashMap 中使用的分离链表法。
  * 之所以采用不同的方式主要是因为：在 ThreadLocalMap 中的散列值分散的十分均匀，很少会出现冲突。并且 ThreadLocalMap 经常需要清除无用的对象，使用纯数组更加方便。
