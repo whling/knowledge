@@ -1,4 +1,4 @@
-package whling.netty.bio;
+package whling.io.bio;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
