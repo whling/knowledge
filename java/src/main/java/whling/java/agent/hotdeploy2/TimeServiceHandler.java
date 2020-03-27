@@ -7,7 +7,6 @@ public class TimeServiceHandler {
             @Override
             public void run() {
                 while (true) {
-
                     BaseService service = ServiceFactory.getService(ServiceFactory.MY_MANAGER);
                     service.say();
 
