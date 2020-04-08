@@ -117,9 +117,11 @@ public class traverse {
 
     private static void recursion(Node<String> node, List<String> list) {
         if (node != null) {
-            list.add(node.data);
+//            list.add(node.data); // 先序遍历
             recursion(node.left, list);
+//            list.add(node.data); // 中序遍历
             recursion(node.right, list);
+            list.add(node.data);  // 后序遍历
         }
     }
 
