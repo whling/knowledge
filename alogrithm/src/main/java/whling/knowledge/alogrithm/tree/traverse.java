@@ -38,7 +38,7 @@ public class traverse {
             list.clear();
         }
 
-        if ((list =  bfs(root)) != null) {
+        if ((list = bfs(root)) != null) {
             System.out.println("=====广度优先遍历======");
             list.forEach(System.out::println);
             System.out.println("==============");
@@ -138,17 +138,64 @@ public class traverse {
         }
 
         Stack<Node<String>> stack = new Stack<>();
-        stack.push(root);
+        /**
+         * 出栈的时候放入list
+         */
+//        stack.push(root);
+//
+//        while (!stack.isEmpty()) {
+//            Node<String> node = stack.pop();
+//            list.add(node.data);
+//
+//            if (node.right != null) {
+//                stack.push(node.right);
+//            }
+//            if (node.left != null) {
+//                stack.push(node.left);
+//            }
+//        }
 
-        while (!stack.isEmpty()) {
-            Node<String> node = stack.pop();
-            list.add(node.data);
 
-            if (node.right != null) {
-                stack.push(node.right);
-            }
-            if (node.left != null) {
-                stack.push(node.left);
+        Node<String> p = root;
+        /**
+         * 前序遍历
+         */
+//        while (p != null || !stack.isEmpty()) {
+//            if (p != null) {
+//                stack.push(p);
+//                list.add(p.data);
+//                p = p.left;
+//            } else {
+//                p = stack.pop();
+//                p = p.right;
+//            }
+//        }
+
+        /**
+         * 中序遍历
+         */
+//        while (p != null || !stack.isEmpty()) {
+//            if (p != null) {
+//                stack.push(p);
+//                p = p.left;
+//            } else {
+//                p = stack.pop();
+//                list.add(p.data);
+//                p = p.right;
+//            }
+//        }
+
+        /**
+         * 后序遍历
+         */
+        while (p != null || !stack.isEmpty()) {
+            if (p != null) {
+                stack.push(p);
+                list.add(0, p.data);
+                p = p.right;
+            } else {
+                p = stack.pop();
+                p = p.left;
             }
         }
 
