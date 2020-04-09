@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * 1。排队（加锁，同一时刻只保持某一个线程能够访问）
  * 2。投票（paxos/raft协议之类，同一时刻也只能有一个主导者）
  * 3。避免（GIT分布式版本控制，做多版本，冲突解决算法/ThreadLocal做多线程隔离，对结果的获取其实就是一种很简单的结果合并，冲突解决）
+ *      写时复制技术copy-on-write也有点这个意思
  */
 @Controller
 public class DemoController {
