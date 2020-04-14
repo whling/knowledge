@@ -14,6 +14,24 @@ import java.util.concurrent.TimeUnit;
 
 public class NettyServer {
 
+    /**
+     * 创建两个NioEventLoopGroup,这两个对象可以看做是传统IO编程模型的两大线程组,boosGroup表示监听端口,创建新连接的线程组,workerGroup表示处理每一条连接的数据读写的线程组
+     * 创建引导类 ServerBootstrap进行服务端的启动工作,通过.group(boosGroup, workerGroup)给引导类配置两大线程定型引导类的线程模型指定服务端的IO模型为NIO,通过.channel(NioServerSocketChannel.class)来指定IO模型
+     * 调用childHandler()方法给引导类创建ChannelInitializer定义后续每条连接的数据读写,业务处理逻辑,泛型参数NioSocketChannel是Netty对NIO类型的连接的抽象,而NioServerSocketChannel也是对NIO类型的连接的抽象
+     * serverBootstrap.bind()是异步的方法调用之后是立即返回的,返回值是ChannelFuture,给ChannelFuture添加监听器GenericFutureListener,在GenericFutureListener的operationComplete方法里面监听端口是否绑定成功
+     * childHandler()用于指定处理新连接数据的读写处理逻辑,handler()用于指定在服务端启动过程中的一些逻辑
+     * attr()方法给服务端的channel即NioServerSocketChannel指定一些自定义属性,通过channel.attr()取出该属性,给NioServerSocketChannel维护一个map
+     * childAttr()方法给每一条连接指定自定义属性,通过channel.attr()取出该属性
+     * childOption()方法给每条连接设置一些TCP底层相关的属性:
+     * ChannelOption.SO_KEEPALIVE表示是否开启TCP底层心跳机制,true为开启
+     * ChannelOption.SO_REUSEADDR表示端口释放后立即就可以被再次使用,因为一般来说,一个端口释放后会等待两分钟之后才能再被使用
+     * ChannelOption.TCP_NODELAY表示是否开始Nagle算法,true表示关闭,false表示开启,通俗地说,如果要求高实时性,有数据发送时就马上发送,就关闭,如果需要减少发送次数减少网络交互就开启
+     * option()方法给服务端channel设置一些TCP底层相关的属性:
+     * ChannelOption.SO_BACKLOG表示系统用于临时存放已完成三次握手的请求的队列的最大长度,如果连接建立频繁,服务器处理创建新连接较慢,适当调大该参数
+     *
+     * @param args
+     */
+
     public static void main(String[] args) throws Exception {
 
         /**
@@ -68,25 +86,26 @@ public class NettyServer {
 
             serverBootstrap.group(bossGroup, workerGroup)
                     .channel(NioServerSocketChannel.class)
-                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .option(ChannelOption.SO_BACKLOG, 1024)
                     .childOption(ChannelOption.SO_KEEPALIVE, true)
+                    .childOption(ChannelOption.TCP_NODELAY, true)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel ch) throws Exception {
                             //加入一个netty 提供 IdleStateHandler
-                    /*
-                    说明
-                    1. IdleStateHandler 是netty 提供的处理空闲状态的处理器
-                    2. long readerIdleTime : 表示多长时间没有读, 就会发送一个心跳检测包检测是否连接
-                    3. long writerIdleTime : 表示多长时间没有写, 就会发送一个心跳检测包检测是否连接
-                    4. long allIdleTime : 表示多长时间没有读写, 就会发送一个心跳检测包检测是否连接
+                            /*
+                            说明
+                            1. IdleStateHandler 是netty 提供的处理空闲状态的处理器
+                            2. long readerIdleTime : 表示多长时间没有读, 就会发送一个心跳检测包检测是否连接
+                            3. long writerIdleTime : 表示多长时间没有写, 就会发送一个心跳检测包检测是否连接
+                            4. long allIdleTime : 表示多长时间没有读写, 就会发送一个心跳检测包检测是否连接
 
-                    5. 文档说明
-                    triggers an {@link IdleStateEvent} when a {@link Channel} has not performed
-                     * read, write, or both operation for a while.
-                    6. 当 IdleStateEvent 触发后 , 就会传递给管道 的下一个handler去处理
-                     通过调用(触发)下一个handler 的 userEventTiggered , 在该方法中去处理 IdleStateEvent(读空闲，写空闲，读写空闲)
-                     */
+                            5. 文档说明
+                            triggers an {@link IdleStateEvent} when a {@link Channel} has not performed
+                             * read, write, or both operation for a while.
+                            6. 当 IdleStateEvent 触发后 , 就会传递给管道 的下一个handler去处理
+                             通过调用(触发)下一个handler 的 userEventTiggered , 在该方法中去处理 IdleStateEvent(读空闲，写空闲，读写空闲)
+                             */
                             ch.pipeline().addLast(new IdleStateHandler(7000, 7000, 10, TimeUnit.SECONDS));
                             ch.pipeline().addLast(new IdleHandler())
                                     .addLast(new NettyServerHandler());
