@@ -174,30 +174,30 @@ public class traverse {
         /**
          * 中序遍历
          */
-//        while (p != null || !stack.isEmpty()) {
-//            if (p != null) {
-//                stack.push(p);
-//                p = p.left;
-//            } else {
-//                p = stack.pop();
-//                list.add(p.data);
-//                p = p.right;
-//            }
-//        }
+        while (p != null || !stack.isEmpty()) {
+            if (p != null) {
+                stack.push(p);
+                p = p.left;
+            } else {
+                p = stack.pop();
+                list.add(p.data);
+                p = p.right;
+            }
+        }
 
         /**
          * 后序遍历
          */
-        while (p != null || !stack.isEmpty()) {
-            if (p != null) {
-                stack.push(p);
-                list.add(0, p.data);
-                p = p.right;
-            } else {
-                p = stack.pop();
-                p = p.left;
-            }
-        }
+//        while (p != null || !stack.isEmpty()) {
+//            if (p != null) {
+//                stack.push(p);
+//                list.add(0, p.data);
+//                p = p.right;
+//            } else {
+//                p = stack.pop();
+//                p = p.left;
+//            }
+//        }
 
         return list;
     }
