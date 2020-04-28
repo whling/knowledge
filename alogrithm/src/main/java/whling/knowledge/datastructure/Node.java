@@ -13,6 +13,16 @@ public class Node<T> {
     }
 
 
+    public void toPrint(){
+        Node temp = this;
+        while (temp != null) {
+            System.out.print(temp.data + "\t");
+            temp = temp.next;
+        }
+        System.out.println("");
+    }
+
+
     public static Node<String> buildLinkedList(){
         Node n1 = new Node("1");
         Node n2 = new Node("2");

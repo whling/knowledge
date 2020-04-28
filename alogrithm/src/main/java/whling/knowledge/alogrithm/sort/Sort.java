@@ -15,11 +15,17 @@ public class Sort {
 
 
         selectSort(intArr);
-
-        Arrays.asList(intArr).stream().forEach(System.out::println);
+        System.out.println(Arrays.toString(intArr));
         System.out.println("========");
 
 
+        selectSort2(intArr);
+        System.out.println(Arrays.toString(intArr));
+        System.out.println("========");
+
+        mergeSort(intArr);
+        System.out.println(Arrays.toString(intArr));
+        System.out.println("========");
     }
 
     static void dubbleSort(Integer[] intArr) {
@@ -44,6 +50,67 @@ public class Sort {
                 }
             }
         }
+    }
+
+    static void selectSort2(Integer[] intArr) {
+        for (int i = 0; i < intArr.length; i++) {
+            int tempMin = i;
+            for (int j = i + 1; j < intArr.length; j++) {
+
+                if (intArr[i] > intArr[j]) {
+                    tempMin = j;
+                }
+
+
+            }
+            int temp = intArr[tempMin];
+            intArr[tempMin] = intArr[i];
+            intArr[i] = temp;
+        }
+    }
+
+
+    /*
+     * 归并排序，O(nlogn)
+     */
+    static Integer[] mergeSort(Integer[] intArr) {
+        if (intArr.length <= 1) {
+            return intArr;
+        }
+        int mid = intArr.length / 2;
+
+        Integer[] left = new Integer[mid];
+        Integer[] right = new Integer[intArr.length - mid];
+
+        for (int i = 0, l = 0, r = 0; i < intArr.length; i++) {
+            if (i < mid) {
+                left[l++] = intArr[i];
+            } else {
+                right[r++] = intArr[i];
+            }
+        }
+
+        return mergeArrays(mergeSort(left), mergeSort(right));
+    }
+
+    static Integer[] mergeArrays(Integer[] left, Integer[] right) {
+        Integer[] res = new Integer[left.length + right.length];
+
+        int l = 0, r = 0;
+
+        for (int i = 0; i < left.length + right.length; i++) {
+            if (r == right.length) {
+                res[i] = left[l++];
+            } else if (l == left.length) {
+                res[i] = right[r++];
+            } else if (left[l] > right[r]) {
+                res[i] = right[r++];
+            } else {
+                res[i] = left[l++];
+            }
+        }
+
+        return res;
     }
 
 }

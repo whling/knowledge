@@ -29,6 +29,14 @@ public class LinkedList {
         head.next = n;
         n.next = null;
 
+        /**
+         * 逆序输出链表
+         */
+
+        while (head != null) {
+
+        }
+
 
 
         /**
@@ -69,7 +77,7 @@ public class LinkedList {
         if (dummyHead == null) {
             dummyHead = node;
         } else {
-            node = dummyHead.next;
+            node.next = dummyHead;
             dummyHead = node;
         }
         return dummyHead;
