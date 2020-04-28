@@ -18,9 +18,9 @@ public class LinkedListMergeSort {
     }
 
     private static Node<Integer> buildNode() {
-        Node<Integer> n1 = new Node<>(3);
+        Node<Integer> n1 = new Node<>(4);
         Node<Integer> n2 = new Node<>(2);
-        Node<Integer> n3 = new Node<>(4);
+        Node<Integer> n3 = new Node<>(3);
 
         n1.next = n2;
         n2.next = n3;
@@ -29,19 +29,21 @@ public class LinkedListMergeSort {
     }
 
     private static Node<Integer> splitLinkedList(Node<Integer> head) {
+
         if (head.next == null) {
             return head;
         }
 
-        Node fast = head, slow = head, other;
+        Node fast = head, slow = head, splitNode;
         while (fast.next != null && fast.next.next != null) {
             fast = fast.next.next;
             slow = slow.next;
         }
-        other = slow.next;
+
+        splitNode = slow.next;
         slow.next = null;
 
-        return mergeSort(splitLinkedList(head), splitLinkedList(other));
+        return mergeSort(splitLinkedList(head), splitLinkedList(splitNode));
     }
 
     private static Node<Integer> mergeSort(Node<Integer> head, Node<Integer> other) {
@@ -57,14 +59,14 @@ public class LinkedListMergeSort {
             }
 
             if (newNode == null) {
-                newNode = dummyHead;
+                newNode = dummyHead.next;
             }
-
             dummyHead = dummyHead.next;
         }
 
-        dummyHead.next = (head != null ? head : other);
-        return newNode.next;
+        dummyHead.next = head != null ? head : other;
+
+        return newNode;
     }
 
 }
