@@ -77,6 +77,26 @@ public class LinkedList01 {
         return head;
     }
 
+    Node<Integer> combile2(Node<Integer> node, Node<Integer> rNode) {
+        Node<Integer> newHead = null, dummyHead = new Node<>();
+
+        while (node != null && rNode != null) {
+            if (node.data > rNode.data) {
+                dummyHead.next = rNode;
+                rNode = rNode.next;
+            } else {
+                dummyHead.next = node;
+                node = node.next;
+            }
+            if (newHead == null) {
+                newHead = dummyHead.next;
+            }
+            dummyHead = dummyHead.next;
+        }
+        dummyHead.next = node != null ? node : rNode;
+        return newHead;
+    }
+
     private static Node reverse(Node node) {
 
         if (node == null) {

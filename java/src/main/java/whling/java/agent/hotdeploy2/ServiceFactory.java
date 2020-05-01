@@ -21,7 +21,13 @@ public class ServiceFactory {
     }
 
     public static BaseService getService(String className) {
-        File loadFile = new File(CLASS_PATH + className.replace(".", "/") + ".class");
+        File loadFile = null;
+        while (true) {
+            loadFile = new File(CLASS_PATH + className.replace(".", "/") + ".class");
+            if (loadFile != null) {
+                break;
+            }
+        }
         long lastModified = loadFile.lastModified();
         //不包含className为key的loadinfo信息,证明没有被加载,需要加载这么类到JVM,重新加载,
         if (loadTimeMap.get(className) == null) {

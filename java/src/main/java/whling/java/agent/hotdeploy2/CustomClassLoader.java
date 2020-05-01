@@ -3,6 +3,7 @@ package whling.java.agent.hotdeploy2;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.concurrent.TimeUnit;
 
 public class CustomClassLoader extends ClassLoader {
 
@@ -23,7 +24,15 @@ public class CustomClassLoader extends ClassLoader {
     private byte[] loadClassData(String name) {
         try {
             name = name.replace(".", "/");
-            FileInputStream is = new FileInputStream(new File(classPath + name + ".class"));
+            FileInputStream is = null;
+            while (true) {
+                is = new FileInputStream(new File(classPath + name + ".class"));
+                if (is != null) {
+                    break;
+                }
+                sleep(100);
+            }
+
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
             int b = 0;
             while ((b = is.read()) != -1) {
@@ -35,5 +44,13 @@ public class CustomClassLoader extends ClassLoader {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void sleep(long mills) {
+        try {
+            TimeUnit.MILLISECONDS.sleep(mills);
+
+        } catch (Exception e) {
+        }
     }
 }
